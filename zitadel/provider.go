@@ -77,8 +77,8 @@ func NewProviderPV6() provider.Provider {
 type providerModel struct {
 	Insecure       types.Bool   `tfsdk:"insecure"`
 	Domain         types.String `tfsdk:"domain"`
-	Token          types.String `tfsdk:"token"`
 	Port           types.String `tfsdk:"port"`
+	Token          types.String `tfsdk:"token"`
 	JWTProfileFile types.String `tfsdk:"jwt_profile_file"`
 	JWTProfileJSON types.String `tfsdk:"jwt_profile_json"`
 }
@@ -99,20 +99,20 @@ func (p *providerPV6) GetSchema(_ context.Context) (tfsdk.Schema, fdiag.Diagnost
 				Optional:    true,
 				Description: "Use insecure connection",
 			},
-			helper.JWTProfileFile: {
+			helper.TokenVar: {
 				Type:        types.StringType,
 				Optional:    true,
 				Description: "Path to the file containing credentials to connect to ZITADEL",
 			},
+			helper.JWTProfileFile: {
+				Type:        types.StringType,
+				Optional:    true,
+				Description: "Path to the file containing credentials to connect to ZITADEL. Either 'jwt_profile_file' or 'jwt_profile_json' is required",
+			},
 			helper.JWTProfileJSON: {
 				Type:        types.StringType,
 				Optional:    true,
-				Description: "JSON value of credentials to connect to ZITADEL",
-			},
-			helper.TokenVar: {
-				Type:        types.StringType,
-				Optional:    true,
-				Description: "Path to the file containing credentials to connect to ZITADEL (deprecated)",
+				Description: "JSON value of credentials to connect to ZITADEL. Either 'jwt_profile_file' or 'jwt_profile_json' is required",
 			},
 			helper.PortVar: {
 				Type:        types.StringType,
@@ -134,9 +134,9 @@ func (p *providerPV6) Configure(ctx context.Context, req provider.ConfigureReque
 	info, err := helper.GetClientInfo(
 		config.Insecure.ValueBool(),
 		config.Domain.ValueString(),
+		config.Token.ValueString(),
 		config.JWTProfileFile.ValueString(),
 		config.JWTProfileJSON.ValueString(),
-		config.Token.ValueString(),
 		config.Port.ValueString(),
 	)
 	if err != nil {
@@ -199,17 +199,17 @@ func Provider() *schema.Provider {
 			helper.TokenVar: {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Path to the file containing credentials to connect to ZITADEL (deprecated)",
+				Description: "Path to the file containing credentials to connect to ZITADEL",
 			},
 			helper.JWTProfileFile: {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Path to the file containing credentials to connect to ZITADEL",
+				Description: "Path to the file containing credentials to connect to ZITADEL. Either 'jwt_profile_file' or 'jwt_profile_json' is required",
 			},
 			helper.JWTProfileJSON: {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "JSON value of credentials to connect to ZITADEL",
+				Description: "JSON value of credentials to connect to ZITADEL. Either 'jwt_profile_file' or 'jwt_profile_json' is required",
 			},
 			helper.PortVar: {
 				Type:        schema.TypeString,
@@ -262,9 +262,9 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	clientinfo, err := helper.GetClientInfo(
 		d.Get(helper.InsecureVar).(bool),
 		d.Get(helper.DomainVar).(string),
+		d.Get(helper.TokenVar).(string),
 		d.Get(helper.JWTProfileFile).(string),
 		d.Get(helper.JWTProfileJSON).(string),
-		d.Get(helper.TokenVar).(string),
 		d.Get(helper.PortVar).(string),
 	)
 	if err != nil {
