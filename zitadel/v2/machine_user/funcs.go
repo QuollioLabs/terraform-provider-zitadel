@@ -83,7 +83,7 @@ func update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		}
 	}
 
-	if d.HasChanges(nameVar, descriptionVar) {
+	if d.HasChanges(nameVar, descriptionVar, accessTokenTypeVar) {
 		_, err := client.UpdateMachine(ctx, &management.UpdateMachineRequest{
 			UserId:          d.Id(),
 			Name:            d.Get(nameVar).(string),
