@@ -130,7 +130,7 @@ func read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 	if machine := user.GetMachine(); machine != nil {
 		set[nameVar] = machine.GetName()
 		set[descriptionVar] = machine.GetDescription()
-		set[accessTokenTypeVar] = machine.GetAccessTokenType()
+		set[accessTokenTypeVar] = machine.GetAccessTokenType().String()
 	}
 	for k, v := range set {
 		if err := d.Set(k, v); err != nil {
