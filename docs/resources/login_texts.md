@@ -13,9 +13,7 @@ description: |-
 
 ```terraform
 resource zitadel_login_texts login_texts_en {
-  depends_on = [zitadel_org.org]
-
-  org_id = zitadel_org.org.id
+  org_id   = zitadel_org.org.id
   language = "en"
 
   email_verification_done_text = {
@@ -394,11 +392,11 @@ Optional:
 - `next_button_text` (String)
 - `nickname_label` (String)
 - `phone_label` (String)
+- `privacy_confirm` (String)
 - `privacy_link_text` (String)
 - `title` (String)
 - `tos_and_privacy_label` (String)
 - `tos_confirm` (String)
-- `tos_confirm_and` (String)
 - `tos_link_text` (String)
 - `username_label` (String)
 
@@ -411,11 +409,11 @@ Optional:
 - `auto_register_button_text` (String)
 - `description` (String)
 - `link_button_text` (String)
+- `privacy_confirm` (String)
 - `privacy_link_text` (String)
 - `title` (String)
 - `tos_and_privacy_label` (String)
 - `tos_confirm` (String)
-- `tos_confirm_and` (String)
 - `tos_link_text` (String)
 
 
@@ -690,6 +688,7 @@ Optional:
 
 - `description` (String)
 - `external_login_description` (String)
+- `login_button_text` (String)
 - `title` (String)
 - `user_name_button_text` (String)
 
@@ -706,12 +705,12 @@ Optional:
 - `orgname_label` (String)
 - `password_confirm_label` (String)
 - `password_label` (String)
+- `privacy_confirm` (String)
 - `privacy_link_text` (String)
 - `save_button_text` (String)
 - `title` (String)
 - `tos_and_privacy_label` (String)
 - `tos_confirm` (String)
-- `tos_confirm_and` (String)
 - `tos_link_text` (String)
 - `username_label` (String)
 
@@ -732,11 +731,11 @@ Optional:
 - `next_button_text` (String)
 - `password_confirm_label` (String)
 - `password_label` (String)
+- `privacy_confirm` (String)
 - `privacy_link_text` (String)
 - `title` (String)
 - `tos_and_privacy_label` (String)
 - `tos_confirm` (String)
-- `tos_confirm_and` (String)
 - `tos_link_text` (String)
 - `username_label` (String)
 
@@ -761,7 +760,7 @@ Optional:
 
 Optional:
 
-- `auto_redirect_description` (String) Text to describe that auto redirect should happen after successful login
+- `auto_redirect_description` (String) Text to describe that auto-redirect should happen after successful login
 - `next_button_text` (String)
 - `redirected_description` (String) Text to describe that the window can be closed after redirect
 - `title` (String)

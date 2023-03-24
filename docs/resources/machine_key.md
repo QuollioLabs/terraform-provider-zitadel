@@ -13,8 +13,6 @@ Resource representing a machine key
 
 ```terraform
 resource zitadel_machine_key machine_key {
-  depends_on = [zitadel_machine_user.machine_user, zitadel_org.org]
-
   org_id          = zitadel_org.org.id
   user_id         = zitadel_machine_user.machine_user.id
   key_type        = "KEY_TYPE_JSON"
@@ -33,7 +31,7 @@ resource zitadel_machine_key machine_key {
 
 ### Optional
 
-- `expiration_date` (String) Expiration date of the machine key
+- `expiration_date` (String) Expiration date of the machine key in the RFC3339 format
 
 ### Read-Only
 

@@ -32,6 +32,7 @@ func update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 
+	id := ""
 	if d.HasChanges(passwordCheckLifetimeVar,
 		externalLoginCheckLifetimeVar,
 		mfaInitSkipLifetimeVar,
@@ -45,6 +46,9 @@ func update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		hidePasswordResetVar,
 		ignoreUnknownUsernamesVar,
 		defaultRedirectURIVar,
+		allowDomainDiscovery,
+		disableLoginWithEmail,
+		disableLoginWithPhone,
 	) {
 		passwordCheckLT, err := time.ParseDuration(d.Get(passwordCheckLifetimeVar).(string))
 		if err != nil {
@@ -80,20 +84,26 @@ func update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 			MfaInitSkipLifetime:        durationpb.New(mfaInitSkipLT),
 			SecondFactorCheckLifetime:  durationpb.New(secondFactorCheckLT),
 			MultiFactorCheckLifetime:   durationpb.New(multiFactorCheckLT),
+			AllowDomainDiscovery:       d.Get(allowDomainDiscovery).(bool),
+			DisableLoginWithEmail:      d.Get(disableLoginWithEmail).(bool),
+			DisableLoginWithPhone:      d.Get(disableLoginWithPhone).(bool),
 		})
 		if helper.IgnorePreconditionError(err) != nil {
 			return diag.Errorf("failed to update login policy: %v", err)
 		}
 		if resp != nil {
-			d.SetId(resp.GetDetails().GetResourceOwner())
-		} else {
-			resp, err := client.GetLoginPolicy(ctx, &admin.GetLoginPolicyRequest{})
-			if err != nil {
-				return diag.Errorf("failed to update default login policy: %v", err)
-			}
-			d.SetId(resp.GetPolicy().GetDetails().GetResourceOwner())
+			id = resp.GetDetails().GetResourceOwner()
 		}
 	}
+
+	if id == "" {
+		resp, err := client.GetLoginPolicy(ctx, &admin.GetLoginPolicyRequest{})
+		if err != nil {
+			return diag.Errorf("failed to update default login policy: %v", err)
+		}
+		id = resp.GetPolicy().GetDetails().GetResourceOwner()
+	}
+	d.SetId(id)
 
 	if d.HasChange(secondFactorsVar) {
 		o, err := client.ListLoginPolicySecondFactors(ctx, &admin.ListLoginPolicySecondFactorsRequest{})
@@ -211,6 +221,9 @@ func read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 		mfaInitSkipLifetimeVar:        resp.Policy.GetMfaInitSkipLifetime().AsDuration().String(),
 		secondFactorCheckLifetimeVar:  resp.Policy.GetSecondFactorCheckLifetime().AsDuration().String(),
 		multiFactorCheckLifetimeVar:   resp.Policy.GetMultiFactorCheckLifetime().AsDuration().String(),
+		allowDomainDiscovery:          resp.Policy.GetAllowDomainDiscovery(),
+		disableLoginWithEmail:         resp.Policy.GetDisableLoginWithEmail(),
+		disableLoginWithPhone:         resp.Policy.GetDisableLoginWithPhone(),
 	}
 
 	respSecond, err := client.ListLoginPolicySecondFactors(ctx, &admin.ListLoginPolicySecondFactorsRequest{})

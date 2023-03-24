@@ -13,8 +13,6 @@ Resource representing a personal access token of a user
 
 ```terraform
 resource zitadel_personal_access_token pat {
-  depends_on = [zitadel_machine_user.machine_user, zitadel_org.org]
-
   org_id          = zitadel_org.org.id
   user_id         = zitadel_machine_user.machine_user.id
   expiration_date = "2519-04-01T08:45:00Z"
@@ -31,7 +29,7 @@ resource zitadel_personal_access_token pat {
 
 ### Optional
 
-- `expiration_date` (String) Expiration date of the token
+- `expiration_date` (String) Expiration date of the token in the RFC3339 format
 
 ### Read-Only
 

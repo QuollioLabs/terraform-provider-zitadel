@@ -13,8 +13,6 @@ Resource representing the custom login policy of an organization.
 
 ```terraform
 resource zitadel_login_policy login_policy {
-  depends_on = [zitadel_org.org, zitadel_org_idp_jwt.jwt_idp, zitadel_org_idp_oidc.oidc_idp]
-
   org_id                        = zitadel_org.org.id
   user_login                    = true
   allow_register                = true
@@ -32,6 +30,9 @@ resource zitadel_login_policy login_policy {
   second_factors                = ["SECOND_FACTOR_TYPE_OTP", "SECOND_FACTOR_TYPE_U2F"]
   multi_factors                 = ["MULTI_FACTOR_TYPE_U2F_WITH_VERIFICATION"]
   idps                          = [zitadel_org_idp_oidc.oidc_idp.id, zitadel_org_idp_jwt.jwt_idp.id]
+  allow_domain_discovery        = true
+  disable_login_with_email      = true
+  disable_login_with_phone      = true
 }
 ```
 
@@ -57,6 +58,9 @@ resource zitadel_login_policy login_policy {
 
 ### Optional
 
+- `allow_domain_discovery` (Boolean) if set to true, the suffix (@domain.com) of an unknown username input on the login screen will be matched against the org domains and will redirect to the registration of that organisation on success.
+- `disable_login_with_email` (Boolean) defines if user can additionally (to the loginname) be identified by their verified email address
+- `disable_login_with_phone` (Boolean) defines if user can additionally (to the loginname) be identified by their verified phone number
 - `idps` (Set of String) allowed idps to login or register
 - `multi_factors` (Set of String) allowed multi factors
 - `second_factors` (Set of String) allowed second factors

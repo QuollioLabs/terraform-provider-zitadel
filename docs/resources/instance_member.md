@@ -13,8 +13,6 @@ Resource representing the membership of a user on an instance, defined with the 
 
 ```terraform
 resource zitadel_instance_member instance_member {
-  depends_on = [zitadel_human_user.human_user]
-
   user_id = zitadel_human_user.human_user.id
   roles   = ["IAM_OWNER"]
 }
@@ -25,7 +23,7 @@ resource zitadel_instance_member instance_member {
 
 ### Required
 
-- `roles` (Set of String) List of roles granted
+- `roles` (Set of String) List of roles granted, full list available here: https://zitadel.com/docs/guides/manage/console/managers#roles
 - `user_id` (String) ID of the user
 
 ### Read-Only
